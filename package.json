@@ -1,0 +1,26 @@
+{
+  "name": "430proj1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests Complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iouie/430Proj1.git"
+  },
+  "author": "Stanley Louie",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Iouie/430Proj1/issues"
+  },
+  "homepage": "https://github.com/Iouie/430Proj1#readme",
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
