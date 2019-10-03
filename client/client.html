@@ -12,6 +12,42 @@
 </head>
 
 <body>
-<h1>test</h1>
+        <section id="top">
+                <h3>OG Yu Gi Oh Card Generator</h3>
+                <div id="nameForm">
+                  <label for="name">Card Name: </label>
+                  <input id="nameField" type="text" name="name" class="textField"/><br>
+                  <label for="cardType">Card Type:</label>
+                  <select id="cType" name="cardType">
+                      <option value = "monst">Monster</option>
+                      <option value = "spell">Spell</option>
+                      <option value = "trap">Trap</option>
+                  </select>
+                  <label for="level">Level:</label>
+                  <input id="levelField" type="number" name="level" min="0" max="12" step="1"/><br>
+                  <label for="attValue">ATK:</label>
+                  <input id="attField" type="text" name="attValue" class="textField"/>
+                  <label for="attValue">DEF:</label>
+                  <input id="defField" type="text" name="defValue" class="textField"/><br>
+                  <label for="descriptionField">Description/Effect:</label>
+                  <input id="description" type="text" name="description" class="textField"/><br>
+                  <label for="url">Image(URL):</label>
+                  <input id="urlField" type="text" name="url"/>
+                  <button id="addUser">Add Card</button>
+                </div>
+                <div id="userForm"  method="get">
+                  <select id='urlField'>
+                    <option value='/getUsers'>/getUsers</option>
+                    <option value='/notReal'>/notReal</option>
+                  </select>
+                  <select id="methodSelect">
+                    <option value="get">GET</option>
+                    <option value="head">HEAD</option>
+                  </select>
+                    <button id="send">Send</button>
+                </div>
+              </section>
+              <section id="content">
+              </section>
 </body>
 </html>
