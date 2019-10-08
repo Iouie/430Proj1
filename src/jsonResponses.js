@@ -1,19 +1,57 @@
+// Note this object is purely in memory
+// When node shuts down this will be cleared.
+// Same when your heroku app shuts down from inactivity
+// We will be working with databases in the next few weeks.
+const cards = {};
+
 // function to send a response
-const respond = (request, response, status, content, type) => {
+const respondJSON = (request, response, status, object) => {
   // set status code and content type (application/json)
-  response.writeHead(status, 'application/json');
-  // stringify the object (so it doesn't use references/pointers/etc)
-  // but is instead a flat string object.
-  // Then write it to the response.
-  if (type === 'application/json') {
-    response.write(JSON.stringify(content));
-  } else {
-    response.write(content);
-  }
-  // Send the response to the client
+  response.writeHead(status, {'Content-Type': 'application/json'});
+  response.write(JSON.stringify(object));
   response.end();
 };
 
+//return card object as JSON
+const getCards = (request, response) => {
+  const responseJSON = {
+    cards,
+  };
+  respondJSON(request, response, 200, responseJSON);
+};
+
+//function to add a user from a POST body
+const addCard = (request, response, body) => {
+  //default json message
+  const responseJSON = {
+    message: "You're missing some details.",
+  };
+  //check to make sure we have both fields
+  //We might want more validation than just checking if they exist
+  //This could easily be abused with invalid types (such as booleans, numbers, etc)
+  //the must needed to create a yu gi oh card, name, description/effects, and an imageurl
+  if(!body.name || !body.description || !body.imgUrl){
+    responseJSON.id = 'missingParameters';
+    return respondJSON(request,response,400,responseJSON);
+  }
+
+      //default status code to 201 created
+  let responseCode = 201;
+
+  // if the card name already exists switch to 204
+  if(cards[body.name]){
+    responseCode = 204;
+  } else {
+    // else create a card with that name
+    cards[body.name] = {};
+  }
+
+  // add or update fields for this card
+  cards[body.name].name = body.name;
+  cards[body.name].description = body.description;
+  cards[body.name].imgUrl = body.imgUrl;
+
+}
 // function to show a success status code
 const success = (request, response) => {
   // message to send
@@ -48,16 +86,6 @@ const notFound = (request, response) => {
   return respond(request, response, 404, responseJSON, 'application/json');
 };
 
-// function to show not found error
-const notReal = (request, response) => {
-  // error message with a description and consistent error id
-  const responseJSON = {
-    message: 'The page you are looking for was not found',
-    id: 'notFound',
-  };
-    // return our json with a 404 not found error code
-  return respond(request, response, 404, responseJSON, 'application/json');
-};
 
 // function for added the user's information
 const addUsers = (request, response) => {
@@ -91,11 +119,4 @@ const updated = (request, response) => {
 // In this syntax, you can do getIndex:getIndex, but if they
 // are the same name, you can short handle to just getIndex,
 module.exports = {
-  success,
-  badRequest,
-  getUsers,
-  addUsers,
-  updated,
-  notReal,
-  notFound,
 };
