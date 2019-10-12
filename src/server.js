@@ -13,9 +13,8 @@ const urlStruct = {
   '/style.css': htmlHandler.getCSS,
   '/success': jsonHandler.success,
   '/badRequest': jsonHandler.badRequest,
-  '/getUsers': jsonHandler.getUsers,
-  '/addUsers': jsonHandler.addUsers,
-  '/notReal': jsonHandler.notReal,
+  '/getCard': jsonHandler.getCards,
+  '/addCard': jsonHandler.addCard,
   '/updated': jsonHandler.updated,
   notFound: jsonHandler.notFound,
 };
@@ -35,7 +34,7 @@ const onRequest = (request, response) => {
   if (urlStruct[parsedUrl.pathname]) {
     urlStruct[parsedUrl.pathname](request, response, params);
   } else {
-    urlStruct.notFound(request, response, params);
+    urlStruct.notFound(request, response);
   }
 };
 
