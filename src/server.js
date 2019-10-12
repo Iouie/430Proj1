@@ -11,11 +11,9 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
   '/': htmlHandler.getIndex,
   '/style.css': htmlHandler.getCSS,
-  '/success': jsonHandler.success,
-  '/badRequest': jsonHandler.badRequest,
-  '/getCard': jsonHandler.getCards,
+  '/getCards': jsonHandler.getCards,
   '/addCard': jsonHandler.addCard,
-  '/updated': jsonHandler.updated,
+  '/findCard': jsonHandler.findCard,
   notFound: jsonHandler.notFound,
 };
 
@@ -34,7 +32,7 @@ const onRequest = (request, response) => {
   if (urlStruct[parsedUrl.pathname]) {
     urlStruct[parsedUrl.pathname](request, response, params);
   } else {
-    urlStruct.notFound(request, response);
+    urlStruct.notFound(request, response, params);
   }
 };
 
