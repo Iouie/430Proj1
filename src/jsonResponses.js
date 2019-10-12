@@ -4,26 +4,31 @@ const query = require('querystring');
 // Same when your heroku app shuts down from inactivity
 // We will be working with databases in the next few weeks.
 const cards = {
-
+  'Jerry Beans Man':{
+    name: 'Jerry Beans Man',
+    cardType: 'monst',
+    description: 'sexy beast',
+    imgUrl: 'https://imgur.com/MjDmzO2',
+  },
 };
 
 // function to send a response
 const respondJSON = (request, response, status, object) => {
   // set status code and content type (application/json)
-  response.writeHead(status, {'Content-Type': 'application/json'});
+  response.writeHead(status, { 'Content-Type': 'application/json' });
   response.write(JSON.stringify(object));
   response.end();
 };
 
 const respondJSONMeta = (request, response, status) => {
-  response.writeHead(status, {'Content-Type': 'application/json'});
+  response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
-}
+};
 
-//return card object as JSON
+// return card object as JSON
 const getCards = (request, response) => {
   const responseJSON = {
-    message: {cards},
+    message: { cards },
   };
   respondJSON(request, response, 200, responseJSON);
 };
@@ -36,14 +41,14 @@ const notFound = (request, response) => {
   };
 
   return respondJSON(request, response, 404, responseJSON);
-}
+};
 
-//function to add a user from a POST body
+// function to add a user from a POST body
 const addCard = (request, response) => {
   let body = [];
 
   request.on('data', (chunk) => {
-    body.push(chunk)
+    body.push(chunk);
   });
 
   request.on('end', () => {
@@ -53,19 +58,18 @@ const addCard = (request, response) => {
     const responseJSON = {};
 
     // check if inputs are filled
-    if(!body.name || !body.description || !body.imgUrl){
+    if (!body.name || !body.description || !body.imgUrl) {
       responseJSON.message = 'You have no filled out all the fields.';
-      responseJSON.id ='missingParams';
-      return respondJSON(request, response, 400, responsejSON);
+      responseJSON.id = 'missingParams';
+      return respondJSON(request, response, 400, responseJSON);
     }
 
     let responseCode = 201;
 
     // find and update card name
-    if(cards[body.name]){
+    if (cards[body.name]) {
       responseCode = 204;
-    }
-    else {
+    } else {
       cards[body.name] = {};
     }
 
@@ -76,7 +80,7 @@ const addCard = (request, response) => {
     cards[body.name].imgUrl = body.imgUrl;
 
     // return JSON message
-    if(responseCode === 201){
+    if (responseCode === 201) {
       responseJSON.message = 'Created new card.';
       return respondJSON(request, response, responseCode, responseJSON);
     }
@@ -87,25 +91,25 @@ const addCard = (request, response) => {
 
 // find card
 const findCard = (request, response, params) => {
-  const respondJSON = {
+  const responseJSON = {
     message: cards[params.name],
   };
 
-  if(!params.name){
+  if (!params.name) {
     responseJSON.message = 'No name';
     responseJSON.id = 'badRequest';
     return respondJSON(request, response, 400, responseJSON);
   }
-  return respondJSON( request, response, 200, responseJSON);
-}
+  return respondJSON(request, response, 200, responseJSON);
+};
 
 
 // exports to set functions to public.
 // In this syntax, you can do getIndex:getIndex, but if they
 // are the same name, you can short handle to just getIndex,
 module.exports = {
-getCards,
-notFound,
-addCard,
-findCard,
+  getCards,
+  notFound,
+  addCard,
+  findCard,
 };
