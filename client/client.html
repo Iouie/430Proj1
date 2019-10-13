@@ -83,7 +83,7 @@
       xhr.setRequestHeader('Accept', 'application/json');
 
       xhr.onload = () => {
-        if (type === 'get' || (type === 'post' && xhr.status === 204)){
+        if (type === 'get' || (type === 'post' && xhr.status !== 204)){
           handleResponse(xhr, true);
         }
         else if(type === 'head' || (type === 'post' && xhr.status === 204)){
