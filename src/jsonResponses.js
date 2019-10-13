@@ -90,7 +90,7 @@ const addCard = (request, response) => {
       cards[bodyParam.name] = {};
     }
 
-    // add all the information
+    // add or update fields for this card
     cards[bodyParam.name].name = bodyParam.name;
     cards[bodyParam.name].cardType = bodyParam.cardType;
     cards[bodyParam.name].description = bodyParam.description;
@@ -105,19 +105,19 @@ const addCard = (request, response) => {
   });
 };
 
-// find card
-const findCard = (request, response, params) => {
-  const responseJSON = {
-    message: cards[params.name],
-  };
+// // find card
+// const findCard = (request, response, params) => {
+//   const responseJSON = {
+//     message: cards[params.name],
+//   };
 
-  if (!params.name) {
-    responseJSON.message = 'No name';
-    responseJSON.id = 'badRequest';
-    return respondJSON(request, response, 400, responseJSON);
-  }
-  return respondJSON(request, response, 200, responseJSON);
-};
+//   if (!params.name) {
+//     responseJSON.message = 'No name';
+//     responseJSON.id = 'badRequest';
+//     return respondJSON(request, response, 400, responseJSON);
+//   }
+//   return respondJSON(request, response, 200, responseJSON);
+// };
 
 
 // exports to set functions to public.
@@ -127,5 +127,5 @@ module.exports = {
   getCards,
   notFound,
   addCard,
-  findCard,
+ // findCard,
 };

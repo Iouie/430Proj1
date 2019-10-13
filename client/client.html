@@ -40,7 +40,7 @@
       if(parseResponse){
         const obj = JSON.parse(xhr.response);
         console.dir(obj.message);
-        if(xhr.status === 200){
+        if(xhr.status === 200){  // if status code is 200
         if(obj.message.cards){
         for(let key in obj.message.cards){
           if(obj.message.cards.hasOwnProperty(key)){
@@ -50,9 +50,9 @@
             const cType = document.createElement('p');   // card type
             const descript = document.createElement('p'); // description
 
-            name.innerHTML = obj.message.cards[key].name;
-            cType.innerHTML = obj.message.cards[key].cardType;
-            descript.innerHTML = obj.message.cards[key].description;
+            name.innerHTML = '<b> Card Name: </b>' + obj.message.cards[key].name;
+            cType.innerHTML = '<b> Card Type: </b>' + obj.message.cards[key].cardType;
+            descript.innerHTML = '<b> Description: </b>' + obj.message.cards[key].description;
 
             img.setAttribute('src', obj.message.cards[key].imgUrl);
             img.setAttribute('class', 'cardImg');
