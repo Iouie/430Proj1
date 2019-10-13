@@ -4,11 +4,23 @@ const query = require('querystring');
 // Same when your heroku app shuts down from inactivity
 // We will be working with databases in the next few weeks.
 const cards = {
-  'Jerry Beans Man':{
+  'Jerry Beans Man': {
     name: 'Jerry Beans Man',
-    cardType: 'monst',
-    description: 'sexy beast',
-    imgUrl: 'https://imgur.com/MjDmzO2',
+    cardType: 'Monster',
+    description: 'sexy bean',
+    imgUrl: 'https://uploads3.yugioh.com/card_images/5463/detail/Jerry_Beans_Man.jpg?1440619168',
+  },
+  'Dark Magician': {
+    name: 'Dark Magician',
+    cardType: 'Monster',
+    description: 'sexy magician',
+    imgUrl: 'https://uploads2.yugioh.com/card_images/257/detail/Dark-Magician.jpg?1375127294',
+  },
+  'Pot of Greed': {
+    name: 'Pot of Greed',
+    cardType: 'Spell',
+    description: 'wtf',
+    imgUrl: 'https://uploads3.yugioh.com/card_images/1093/detail/1226.jpg?1385099030',
   },
 };
 
@@ -28,9 +40,9 @@ const respondJSONMeta = (request, response, status) => {
 // return card object as JSON
 const getCards = (request, response) => {
   const responseJSON = {
-    message: { cards },
+    message: {cards},
   };
-  respondJSON(request, response, 200, responseJSON);
+  return respondJSON(request, response, 200, responseJSON);
 };
 
 // function for 404 not found requests with message
@@ -45,7 +57,12 @@ const notFound = (request, response) => {
 
 // function to add a user from a POST body
 const addCard = (request, response) => {
-  let body = [];
+  const body = [];
+
+  request.on('error', () => {
+    response.statusCode = 400;
+    response.end();
+  });
 
   request.on('data', (chunk) => {
     body.push(chunk);
@@ -53,13 +70,13 @@ const addCard = (request, response) => {
 
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
-    body = query.parse(bodyString);
+    const bodyParam = query.parse(bodyString);
 
     const responseJSON = {};
 
     // check if inputs are filled
-    if (!body.name || !body.description || !body.imgUrl) {
-      responseJSON.message = 'You have no filled out all the fields.';
+    if (!bodyParam.name || !bodyParam.description || !bodyParam.imgUrl) {
+      responseJSON.message = 'You need to fill out all the fields.';
       responseJSON.id = 'missingParams';
       return respondJSON(request, response, 400, responseJSON);
     }
@@ -67,24 +84,23 @@ const addCard = (request, response) => {
     let responseCode = 201;
 
     // find and update card name
-    if (cards[body.name]) {
+    if (cards[bodyParam.name]) {
       responseCode = 204;
     } else {
-      cards[body.name] = {};
+      cards[bodyParam.name] = {};
     }
 
     // add all the information
-    cards[body.name].name = body.name;
-    cards[body.name].cardType = body.cardType;
-    cards[body.name].description = body.description;
-    cards[body.name].imgUrl = body.imgUrl;
+    cards[bodyParam.name].name = bodyParam.name;
+    cards[bodyParam.name].cardType = bodyParam.cardType;
+    cards[bodyParam.name].description = bodyParam.description;
+    cards[bodyParam.name].imgUrl = bodyParam.imgUrl;
 
     // return JSON message
     if (responseCode === 201) {
       responseJSON.message = 'Created new card.';
       return respondJSON(request, response, responseCode, responseJSON);
     }
-
     return respondJSONMeta(request, response, responseCode);
   });
 };

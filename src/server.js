@@ -13,7 +13,6 @@ const urlStruct = {
   '/style.css': htmlHandler.getCSS,
   '/getCards': jsonHandler.getCards,
   '/addCard': jsonHandler.addCard,
-  '/findCard': jsonHandler.findCard,
   notFound: jsonHandler.notFound,
 };
 
