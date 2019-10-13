@@ -40,7 +40,7 @@ const respondJSONMeta = (request, response, status) => {
 // return card object as JSON
 const getCards = (request, response) => {
   const responseJSON = {
-    message: {cards},
+    message: { cards },
   };
   return respondJSON(request, response, 200, responseJSON);
 };
@@ -127,5 +127,5 @@ module.exports = {
   getCards,
   notFound,
   addCard,
- // findCard,
+  // findCard,
 };

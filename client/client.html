@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>YGO Card Generator</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
@@ -42,23 +43,26 @@
         console.dir(obj.message);
         if(xhr.status === 200){  // if status code is 200
         if(obj.message.cards){
-        for(let key in obj.message.cards){
-          if(obj.message.cards.hasOwnProperty(key)){
+        for(let key in obj.message.cards){  // gets all json
+          if(obj.message.cards.hasOwnProperty(key)){ // has a key property
             const div = document.createElement('div');   // create div
             const img = document.createElement('img');   // img
             const name = document.createElement('h3');   // card name
             const cType = document.createElement('p');   // card type
             const descript = document.createElement('p'); // description
 
+            // list the JSON file onto content
             name.innerHTML = '<b> Card Name: </b>' + obj.message.cards[key].name;
             cType.innerHTML = '<b> Card Type: </b>' + obj.message.cards[key].cardType;
             descript.innerHTML = '<b> Description: </b>' + obj.message.cards[key].description;
 
+            // set attribute for CSS maybe
             img.setAttribute('src', obj.message.cards[key].imgUrl);
             img.setAttribute('class', 'cardImg');
             name.setAttribute('class', 'cardTitle');
             div.setAttribute('class', 'ygoCard');
             
+            // add files to a div element and display on content
             div.appendChild(img);
             div.appendChild(name);
             div.appendChild(cType);
@@ -79,9 +83,14 @@
 
       const xhr = new XMLHttpRequest();
       xhr.open(type, url);
+      //set our request type to x-www-form-urlencoded
+      //which is one of the common types of form data. 
+      //This type has the same format as query strings key=value&key2=value2
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      //set our requested response type in hopes of a JSON response
       xhr.setRequestHeader('Accept', 'application/json');
 
+      // handle get and head response
       xhr.onload = () => {
         if (type === 'get' || (type === 'post' && xhr.status !== 204)){
           handleResponse(xhr, true);
@@ -91,7 +100,6 @@
         }
       };
 
-      if(type === 'post'){
       const nameForm = document.querySelector('#cardForm');
       const nameField = nameForm.querySelector('#nameField');
       const cType = nameForm.querySelector('#cType');
@@ -99,21 +107,26 @@
       const imgUrl = nameForm.querySelector('#urlField');
 
 
+      //build our x-www-form-urlencoded format. Without ajax the 
+      //browser would do this automatically but it forcefully changes pages
+      //which we don't want.
+      //The format is the same as query strings, so key=value&key2=value2
+      //The 'name' fields from the inputs are the variable names sent to
+      //the server. 
+      //So ours might look like  name=test&age=22
+      //Again the 'name' fields in the form are the variable names in the string
+      //and the variable names the server will look for.
       const formData = `name=${nameField.value}&cardType=${cType.value}&description=${description.value}&imgUrl=${imgUrl.value}`;
       
       xhr.send(formData);
 
       return false;
-      }
-      else{
-        xhr.send();
-      }
     };
 
 
     const init = () => {
       const cardForm = document.querySelector('#cardForm');
-      const postCard = cardForm.querySelectorAll('input')[2];
+      const postCard = cardForm.querySelector('#addButton'); //get the button
 
       postCard.addEventListener('click', e => {
         e.preventDefault();
@@ -121,7 +134,7 @@
       });
 
       const actionForm = document.querySelector('#actionForm');
-      const getCards = actionForm.querySelector('input');
+      const getCards = actionForm.querySelector('#getCardButton');
 
       getCards.addEventListener('click', e =>{
         e.preventDefault();
@@ -129,51 +142,86 @@
       });
 
     }
+    // preloads the cards object
     window.onload = sendPost('/getCards', 'get');
     window.onload = init;
 </script>
 </head>
 
 <body>
+  <div class="container-fluid">
+    <div class='row'>
+      <div class='col-12'>
   <div id="header">
-    <h1 id='title'>YGO Card Generator</h1>
-    <p>All these new Yu Gi Oh cards are wack.</p>
-    <p>Make your own card and check out all the cards you have created instead!</p>
+    <h1 id='title' class='text-center'>YGO Card Generator</h1>
+    <p class='text-center'>All these new Yu Gi Oh cards are wack.</p>
+    <p class='text-center'>Make your own card and check out all the cards you have created instead!</p>
   </div>
+</div>
+</div>
+
 
   <form id="cardForm">
+    <div class='row'>
 
+      <div class='offset-md-3 col-md-3'>
     <label for="name">Card Name: </label>
-    <input id="nameField" type="text" name="name" class="textField" /><br>
+    <input id="nameField" type="text" name="name" class="textField" placeholder='Monster Name' size='28' />
+    </div>
 
+    <div class='offset-md-1 col-md-3'>
     <label for="cardType">Card Type:</label>
     <select id="cType" name="cardType">
-
       <option value="monster">Monster</option>
       <option value="spell">Spell</option>
       <option value="trap">Trap</option>
+    </select>
+    </div>
 
-    </select><br>
+    </div>
 
-    <label for="description">Description/Effect:</label>
-    <textarea id="descriptionField" type="text" name="description" rows="5" cols="50" class="textField"></textarea><br>
+    <div class='row'>
+        <div class="col-md-2 col-md-offset-1 custom"></div>
+    </div>
 
+
+    <div class='row'>
+    <div class="col-md-6 offset-md-3">
+    <label for="description" >Description/Effect:</label>
+    <textarea id="descriptionField" type="text" name="description" rows="3" cols="45" class="textField" placeholder='What does Pot of Greed do again?'></textarea>
+  </div>
+  </div>
+
+
+  <div class='row'>
+      <div class="col-md-6 offset-md-3">
     <label for="imgUrl">Image:</label>
-    <input id="urlField" type="text" name="imgUrl" /><br>
+    <input id="urlField" type="text" name="imgUrl" size='75' placeholder='https://uploads3.yugioh.com/card_images/5463/detail/Jerry_Beans_Man.jpg?1440619168'/>
+    </div>
+  </div>
 
     <div id='addCard'>
-      <input type='submit' value='Add Card'/>
+      <button id='addButton' input type='submit'>Add Card</button>
     </div>
+
+
   </form>
 
   <form id='actionForm' action='/getCards' method='get'>
     <div id='refresh'>
-      <input type='submit' value='Get Cards' />
+      <button id ='getCardButton' input type='submit'>Get Cards</button>
     </div>
   </form>
 
+
   <section id="content">
   </section>
+
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 
 </html>
