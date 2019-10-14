@@ -10,16 +10,16 @@ const cards = {
     description: 'sexy bean',
     imgUrl: 'https://uploads3.yugioh.com/card_images/5463/detail/Jerry_Beans_Man.jpg?1440619168',
   },
-  'Dark Magician': {
-    name: 'Dark Magician',
-    cardType: 'Monster',
-    description: 'sexy magician',
-    imgUrl: 'https://uploads2.yugioh.com/card_images/257/detail/Dark-Magician.jpg?1375127294',
+  Trap: {
+    name: 'Some Dude I Found Online',
+    cardType: 'Trap',
+    description: "It's a guy.",
+    imgUrl: 'https://pm1.narvii.com/6975/43cb30e51eebce85c44679a143404a4a7e81a967r1-288-537v2_hq.jpg',
   },
   'Pot of Greed': {
     name: 'Pot of Greed',
     cardType: 'Spell',
-    description: 'wtf',
+    description: 'This card allows me to draw 2 more cards from my deck. ',
     imgUrl: 'https://uploads3.yugioh.com/card_images/1093/detail/1226.jpg?1385099030',
   },
 };
@@ -105,20 +105,6 @@ const addCard = (request, response) => {
   });
 };
 
-// // find card
-// const findCard = (request, response, params) => {
-//   const responseJSON = {
-//     message: cards[params.name],
-//   };
-
-//   if (!params.name) {
-//     responseJSON.message = 'No name';
-//     responseJSON.id = 'badRequest';
-//     return respondJSON(request, response, 400, responseJSON);
-//   }
-//   return respondJSON(request, response, 200, responseJSON);
-// };
-
 
 // exports to set functions to public.
 // In this syntax, you can do getIndex:getIndex, but if they
@@ -127,5 +113,4 @@ module.exports = {
   getCards,
   notFound,
   addCard,
-  // findCard,
 };

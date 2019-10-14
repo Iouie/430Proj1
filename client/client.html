@@ -8,6 +8,7 @@
   <title>YGO Card Generator</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Jua|Play&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
@@ -60,7 +61,19 @@
             img.setAttribute('src', obj.message.cards[key].imgUrl);
             img.setAttribute('class', 'cardImg');
             name.setAttribute('class', 'cardTitle');
-            div.setAttribute('class', 'ygoCard');
+
+            // allows me to alter the color based off card Type
+
+            if(obj.message.cards[key].cardType === 'Monster')  //if monster card
+            {
+            div.setAttribute('class', 'mCard');
+            }
+            else if(obj.message.cards[key].cardType === 'Spell'){   // if spell card
+              div.setAttribute('class', 'sCard');
+            }
+            else{          
+              div.setAttribute('class', 'tCard');    // trap card
+            }
             
             // add files to a div element and display on content
             div.appendChild(img);
@@ -92,14 +105,10 @@
 
       // handle get and head response
       xhr.onload = () => {
-        if (type === 'get' || (type === 'post' && xhr.status !== 204)){
           handleResponse(xhr, true);
-        }
-        else if(type === 'head' || (type === 'post' && xhr.status === 204)){
-          handleResponse(xhr, false);
-        }
       };
 
+      // get the value of each of text
       const nameForm = document.querySelector('#cardForm');
       const nameField = nameForm.querySelector('#nameField');
       const cType = nameForm.querySelector('#cType');
@@ -154,8 +163,7 @@
       <div class='col-12'>
   <div id="header">
     <h1 id='title' class='text-center'>YGO Card Generator</h1>
-    <p class='text-center'>All these new Yu Gi Oh cards are wack.</p>
-    <p class='text-center'>Make your own card and check out all the cards you have created instead!</p>
+    <h4 class='text-center'>Make your own card and check out all the cards you have created!</h4>
   </div>
 </div>
 </div>
@@ -166,15 +174,15 @@
 
       <div class='offset-md-3 col-md-3'>
     <label for="name">Card Name: </label>
-    <input id="nameField" type="text" name="name" class="textField" placeholder='Monster Name' size='28' />
+    <input id="nameField" type="text" name="name" class="textField" placeholder="ie. Jerry Beans Woman" size='28' />
     </div>
 
     <div class='offset-md-1 col-md-3'>
     <label for="cardType">Card Type:</label>
     <select id="cType" name="cardType">
-      <option value="monster">Monster</option>
-      <option value="spell">Spell</option>
-      <option value="trap">Trap</option>
+      <option value="Monster">Monster</option>
+      <option value="Spell">Spell</option>
+      <option value="Trap">Trap</option>
     </select>
     </div>
 
@@ -188,7 +196,7 @@
     <div class='row'>
     <div class="col-md-6 offset-md-3">
     <label for="description" >Description/Effect:</label>
-    <textarea id="descriptionField" type="text" name="description" rows="3" cols="45" class="textField" placeholder='What does Pot of Greed do again?'></textarea>
+    <textarea id="descriptionField" type="text" name="description" rows="3" cols="45" class="textField" placeholder='ie. What does Pot of Greed do again?'></textarea>
   </div>
   </div>
 
@@ -196,25 +204,43 @@
   <div class='row'>
       <div class="col-md-6 offset-md-3">
     <label for="imgUrl">Image:</label>
-    <input id="urlField" type="text" name="imgUrl" size='75' placeholder='https://uploads3.yugioh.com/card_images/5463/detail/Jerry_Beans_Man.jpg?1440619168'/>
+    <input id="urlField" type="text" name="imgUrl" size='75' placeholder='ie. https://uploads3.yugioh.com/card_images/5463/detail/Jerry_Beans_Man.jpg?1440619168'/>
     </div>
   </div>
 
-    <div id='addCard'>
-      <button id='addButton' input type='submit'>Add Card</button>
+  <div class='row'>
+      <div class="col-md-2 col-md-offset-1 custom"></div>
     </div>
 
+  <div class='row'>
+    <div class='col-md-6 offset-md-3'>
+    <div id='addCard'>
+      <button id='addButton' input type='submit' input class='btn btn-primary btn-lg btn-block'>Add Card</button>
+    </div>
+  </div>
+</div>
 
   </form>
+<div class='row'>
+  <div class="col-md-2 col-md-offset-1 custom"></div>
+</div>
 
+  <div class='row'>
+    <div class='col-md-6 offset-md-3'>
   <form id='actionForm' action='/getCards' method='get'>
     <div id='refresh'>
-      <button id ='getCardButton' input type='submit'>Get Cards</button>
+      <button id ='getCardButton' input type='submit' input class='btn btn-primary btn-lg btn-block'>Get Card</button>
+      </div>
+      </div>
     </div>
   </form>
+</div>
 
+<div class='row'>
+    <div class="col-md-2 col-md-offset-1 custom"></div>
+  </div>
 
-  <section id="content">
+  <section id="content" p class='text-center'>
   </section>
 
   </div>

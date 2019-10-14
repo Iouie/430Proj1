@@ -13,6 +13,7 @@ const urlStruct = {
   '/style.css': htmlHandler.getCSS,
   '/getCards': jsonHandler.getCards,
   '/addCard': jsonHandler.addCard,
+  '/assets/realm.jpg': htmlHandler.getBG,
   notFound: jsonHandler.notFound,
 };
 

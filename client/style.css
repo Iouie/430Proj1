@@ -1,3 +1,36 @@
+*{
+  font-family: 'Jua', sans-serif;
+}
+
+body{
+  background-image: url('/assets/realm.jpg');
+}
+
+h1, h2, h4, b, label{
+  color:white;
+}
+
 .custom{
   margin-bottom:25px;
+}
+
+.mCard {
+  display: inline-block;
+  margin: 0.3rem 0.5rem;
+  background: #CCCC00;
+  padding: 0.5rem;
+}
+
+.sCard {
+  display: inline-block;
+  margin: 0.3rem 0.5rem;
+  background: #008000;
+  padding: 0.5rem;
+}
+
+.tCard {
+  display: inline-block;
+  margin: 0.3rem 0.5rem;
+  background: #ce328e;
+  padding: 0.5rem;
 }
