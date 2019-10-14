@@ -139,7 +139,7 @@
 
       postCard.addEventListener('click', e => {
         e.preventDefault();
-        sendPost('/addCard', 'post', e);
+        sendPost('/addCard', 'POST', e);
       });
 
       const actionForm = document.querySelector('#actionForm');
@@ -147,12 +147,12 @@
 
       getCards.addEventListener('click', e =>{
         e.preventDefault();
-        sendPost('/getCards', 'get', e);
+        sendPost('/getCards', 'GET', e);
       });
 
     }
     // preloads the cards object
-    window.onload = sendPost('/getCards', 'get');
+    window.onload = sendPost('/getCards', 'GET');
     window.onload = init;
 </script>
 </head>

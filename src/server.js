@@ -14,8 +14,44 @@ const urlStruct = {
   '/getCards': jsonHandler.getCards,
   '/addCard': jsonHandler.addCard,
   '/assets/realm.jpg': htmlHandler.getBG,
-  notFound: jsonHandler.notFound,
+  '/notFound': jsonHandler.notFound,
 };
+
+const handlePost = (request, response) => {
+  const res = response;
+
+//uploads come in as a byte stream that we need 
+    //to reassemble once it's all arrived
+    const body = [];
+
+//if the upload stream errors out, just throw a
+    //a bad request and send it back 
+    request.on('error', (err) => {
+      console.dir(err);
+      res.statusCode = 400;
+      res.end();
+    });
+
+    //on 'data' is for each byte of data that comes in
+    //from the upload. We will add it to our byte array.
+    request.on('data', (chunk) => {
+      body.push(chunk); 
+    });
+
+    //on end of upload stream. 
+    request.on('end', () => {
+      //combine our byte array (using Buffer.concat)
+      //and convert it to a string value (in this instance)
+      const bodyString = Buffer.concat(body).toString();
+      //since we are getting x-www-form-urlencoded data
+      //the format will be the same as querystrings
+      //Parse the string into an object by field name
+      const bodyParams = query.parse(bodyString);
+
+      //pass to our addUser function
+      jsonHandler.addCard(request, res, bodyParams);
+    });
+  };
 
 const onRequest = (request, response) => {
 // parse the url using the url module
@@ -24,16 +60,20 @@ const onRequest = (request, response) => {
 
   // grab the query parameters (?key=value&key2=value2&etc=etc)
   // and parse them into a reusable object by field name
-  const params = query.parse(parsedUrl.query);
+   const params = query.parse(parsedUrl.query);
 
-
-  // check if the path name (the /name part of the url) matches
-  // any in our url object. If so call that function. If not, default to index.
-  if (urlStruct[parsedUrl.pathname]) {
-    urlStruct[parsedUrl.pathname](request, response, params);
-  } else {
-    urlStruct.notFound(request, response, params);
-  }
+if(parsedUrl.pathname === '/getCards' && request.method === 'GET'){
+  jsonHandler.getCards(request, response, parsedUrl.query);
+}
+else if(request.method === 'POST'){
+  handlePost(request, response);
+}
+else if(urlStruct[parsedUrl.pathname]){
+  urlStruct[parsedUrl.pathname](request,response);
+}
+else{
+  urlStruct['/notFound'](request, response, params);
+}
 };
 
 http.createServer(onRequest).listen(port);

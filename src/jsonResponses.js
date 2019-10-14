@@ -1,4 +1,3 @@
-const query = require('querystring');
 // Note this object is purely in memory
 // When node shuts down this will be cleared.
 // Same when your heroku app shuts down from inactivity
@@ -56,53 +55,38 @@ const notFound = (request, response) => {
 };
 
 // function to add a user from a POST body
-const addCard = (request, response) => {
-  const body = [];
+const addCard = (request, response, body) => {
+  const responseJSON = {
+    message: 'You need to fill out all the fields.',
+  };
 
-  request.on('error', () => {
-    response.statusCode = 400;
-    response.end();
-  });
+  // check if inputs are filled
+  if (!body.name || !body.description || !body.imgUrl) {
+    responseJSON.id = 'missingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
 
-  request.on('data', (chunk) => {
-    body.push(chunk);
-  });
+  let responseCode = 201;
 
-  request.on('end', () => {
-    const bodyString = Buffer.concat(body).toString();
-    const bodyParam = query.parse(bodyString);
+  // find and update card name
+  if (cards[body.name]) {
+    responseCode = 204;
+  } else {
+    cards[body.name] = {};
+  }
 
-    const responseJSON = {};
+  // add or update fields for this card
+  cards[body.name].name = body.name;
+  cards[body.name].cardType = body.cardType;
+  cards[body.name].description = body.description;
+  cards[body.name].imgUrl = body.imgUrl;
 
-    // check if inputs are filled
-    if (!bodyParam.name || !bodyParam.description || !bodyParam.imgUrl) {
-      responseJSON.message = 'You need to fill out all the fields.';
-      responseJSON.id = 'missingParams';
-      return respondJSON(request, response, 400, responseJSON);
-    }
-
-    let responseCode = 201;
-
-    // find and update card name
-    if (cards[bodyParam.name]) {
-      responseCode = 204;
-    } else {
-      cards[bodyParam.name] = {};
-    }
-
-    // add or update fields for this card
-    cards[bodyParam.name].name = bodyParam.name;
-    cards[bodyParam.name].cardType = bodyParam.cardType;
-    cards[bodyParam.name].description = bodyParam.description;
-    cards[bodyParam.name].imgUrl = bodyParam.imgUrl;
-
-    // return JSON message
-    if (responseCode === 201) {
-      responseJSON.message = 'Created new card.';
-      return respondJSON(request, response, responseCode, responseJSON);
-    }
-    return respondJSONMeta(request, response, responseCode);
-  });
+  // return JSON message
+  if (responseCode === 201) {
+    responseJSON.message = 'Created new card.';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+  return respondJSONMeta(request, response, responseCode);
 };
 
 
