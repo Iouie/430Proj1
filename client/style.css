@@ -22,6 +22,10 @@ h1, h2, h4, b, label{
   background: #CCCC00;
   padding: 0.5rem;
 }
+.cardImg{
+  max-width: 500px;
+  max-height: 500px;
+}
 
 .sCard {
   display: inline-block;
